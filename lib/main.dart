@@ -1,6 +1,9 @@
+import 'package:first_app/quiz.dart';
+import 'package:first_app/result.dart';
 import 'package:flutter/material.dart';
 
 import 'package:first_app/question.dart'; // or import './question.dart';
+import 'package:first_app/answer.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,45 +16,67 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var _questionsIndex = 0;
+  static const _questions = [
+    {
+      'questionText': 'Jaki jest twoj ulubiony kolor?',
+      'answers': [
+        {'text': 'Czarny', 'score': 10},
+        {'text': 'Czerwony', 'score': 5},
+        {'text': 'Zolty', 'score': 3},
+        {'text': 'Zielony', 'score': 1}
+      ],
+    },
+    {
+      'questionText': 'Jakie jest twoje ulubione zwierze?',
+      'answers': [
+        {'text': 'Pies', 'score': 10},
+        {'text': 'Kot', 'score': 5},
+        {'text': 'Lew', 'score': 3},
+        {'text': 'Tygrys', 'score': 1}
+      ],
+    },
+    {
+      'questionText': 'Jaka aplikacje bys zrobil?',
+      'answers': [
+        {'text': 'Pierwsza', 'score': 10},
+        {'text': 'Druga', 'score': 5},
+        {'text': 'Trzecia', 'score': 3},
+        {'text': 'Czwarta', 'score': 1}
+      ],
+    },
+  ];
 
-  void _answerQuestion() {
+  var _questionsIndex = 0;
+  var _totalScore = 0;
+
+  void _answerQuestion(int score) {
+    _totalScore = _totalScore + score;
+
     setState(() {
       _questionsIndex = _questionsIndex + 1;
     });
 
     print(_questionsIndex);
+    if (_questionsIndex < _questions.length) {
+      print('Nastepne pytanie.');
+    } else {
+      print('Nie ma nastepnego pytania.');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = ['Pytanie pierwsze', 'Pytanie drugie', 'Pytanie trzecie'];
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('My first app'),
         ),
-        body: Column(
-          children: [
-            Question(
-              questions[_questionsIndex],
-            ),
-            RaisedButton(
-              child: Text('Przycisk 1'),
-              onPressed: _answerQuestion,
-            ),
-            RaisedButton(
-              child: Text('Przycisk 2'),
-              onPressed: () => print('Answer Chosen 2'),
-            ),
-            RaisedButton(
-              child: Text('Przycisk 3'),
-              onPressed: () {
-                print('Answer Chosen 3');
-              },
-            ),
-          ],
-        ),
+        body: _questionsIndex < _questions.length
+            ? Quiz(
+                questions: _questions,
+                answerQuestion: _answerQuestion,
+                questionsIndex: _questionsIndex)
+            : Result(_totalScore),
       ),
     );
   }
