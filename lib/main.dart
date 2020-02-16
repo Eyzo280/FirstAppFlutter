@@ -49,6 +49,13 @@ class _MyAppState extends State<MyApp> {
   var _questionsIndex = 0;
   var _totalScore = 0;
 
+  void resetQuiz() {
+    setState(() {
+      _questionsIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
   void _answerQuestion(int score) {
     _totalScore = _totalScore + score;
 
@@ -60,7 +67,7 @@ class _MyAppState extends State<MyApp> {
     if (_questionsIndex < _questions.length) {
       print('Nastepne pytanie.');
     } else {
-      print('Nie ma nastepnego pytania.');
+      print('Koniec Pytan.');
     }
   }
 
@@ -76,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                 questions: _questions,
                 answerQuestion: _answerQuestion,
                 questionsIndex: _questionsIndex)
-            : Result(_totalScore),
+            : Result(_totalScore, resetQuiz),
       ),
     );
   }
